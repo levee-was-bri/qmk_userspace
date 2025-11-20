@@ -40,12 +40,6 @@ enum dilemma_keymap_layers {
 #    define SNIPING KC_NO
 #endif // !POINTING_DEVICE_ENABLE
 
-const uint16_t PROGMEM enter_combo[] = {KC_K, KC_L, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {KC_S, KC_D, COMBO_END};
-combo_t key_combos[] = {
-    COMBO(enter_combo, KC_ENT),
-    COMBO(esc_combo, KC_ESC), // keycodes with modifiers are possible too!
-};
 
 
 // clang-format off
