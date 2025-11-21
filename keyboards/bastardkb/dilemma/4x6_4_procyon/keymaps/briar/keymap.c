@@ -265,7 +265,7 @@ void bspc_shift_reset(tap_dance_state_t *state, void *user_data) {
 }
 
 tap_dance_action_t tap_dance_actions[] = {
-    [X_CTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished, x_reset,
+    [X_CTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished, x_reset),
     [BSPC_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bspc_shift_finished, bspc_shift_reset)
 };
 
