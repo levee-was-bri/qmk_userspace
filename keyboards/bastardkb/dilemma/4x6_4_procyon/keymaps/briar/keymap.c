@@ -54,48 +54,44 @@ void x_finished(tap_dance_state_t *state, void *user_data);
 void x_reset(tap_dance_state_t *state, void *user_data);
 
 // ──────────────────────────────────────────────────────────────
-// Reusable home-row mods: modifier only on first hold, letter on any tap
+// Reusable “mod on first hold only, letter on any tap” tap-dance
 // ──────────────────────────────────────────────────────────────
 typedef struct {
-    uint16_t mod;
-    uint16_t kc;
+    uint16_t mod_keycode;   // KC_LCTL, KC_LALT, KC_LGUI, etc.
+    uint16_t plain_keycode; // KC_A, KC_S, KC_D, KC_F, etc.
 } td_mod_tap_t;
 
-void td_hrm_finished(tap_dance_state_t *state, void *user_data) {
+// One state per physical key is enough — we store the actual mod/plain inside user_data
+void td_mod_finished(tap_dance_state_t *state, void *user_data) {
     td_mod_tap_t *data = (td_mod_tap_t *)user_data;
 
     if (state->pressed && state->count == 1) {
-        register_code(data->mod);           // First hold → modifier
+        // First hold → activate the modifier
+        register_code(data->mod_keycode);
     } else {
-        register_code16(data->kc);           // Any tap (1×, 2×, …) → letter
+        // Any tap (single, double, triple…) → just send the plain key
+        // We use register + unregister so repeat works if you hold the tap
+        register_code16(data->plain_keycode);
     }
 }
 
-void td_hrm_reset(tap_dance_state_t *state, void *user_data) {
+void td_mod_reset(tap_dance_state_t *state, void *user_data) {
     td_mod_tap_t *data = (td_mod_tap_t *)user_data;
-    unregister_code(data->mod);
-    unregister_code16(data->kc);
+
+    unregister_code(data->mod_keycode);
+    unregister_code16(data->plain_keycode);
 }
 
 // ──────────────────────────────────────────────────────────────
-// Enum for all home-row mod tap dances
+// Convenience macros — this is the magic you asked for
 // ──────────────────────────────────────────────────────────────
-enum {
-    TD_CTL_A, TD_CTL_S, TD_CTL_D, TD_CTL_F, TD_CTL_J,
-    TD_GUI_A, TD_GUI_S, TD_GUI_D, TD_GUI_F, TD_GUI_J, TD_GUI_K,
-    TD_ALT_A, TD_ALT_S, TD_ALT_D, TD_ALT_F, TD_ALT_J, TD_ALT_K, TD_ALT_L,
-    TD_SFT_A, TD_SFT_S, TD_SFT_D, TD_SFT_F, TD_SFT_J, TD_SFT_K, TD_SFT_L,
-    // add more if you ever need them
-};
+#define MAKE_TD_MOD(mod, letter) \
+    { .mod_keycode = mod, .plain_keycode = letter }
 
-// ──────────────────────────────────────────────────────────────
-// Super clean macros — use exactly like you wanted: TD_CTL(KC_F)
-// ──────────────────────────────────────────────────────────────
-#define TD_CTL(kc)  TD(TD_CTL_##kc)
-#define TD_GUI(kc)  TD(TD_GUI_##kc)
-#define TD_ALT(kc)  TD(TD_ALT_##kc)
-#define TD_SFT(kc)  TD(TD_SFT_##kc)
-
+#define TD_CTL(kc  ) TD(TD_CTL_##kc  )
+#define TD_ALT(kc  ) TD(TD_ALT_##kc  )
+#define TD_GUI(kc  ) TD(TD_GUI_##kc  )
+#define TD_SFT(kc  ) TD(TD_SFT_##kc  )
 
 // Automatically enable sniping-mode on the pointer layer.
 // #define DILEMMA_AUTO_SNIPING_ON_LAYER LAYER_POINTER
@@ -308,25 +304,22 @@ void bspc_shift_reset(tap_dance_state_t *state, void *user_data) {
     bspc_shift_state.state = TD_NONE;
 }
 
-// ──────────────────────────────────────────────────────────────
-// Tap dance table
-// ──────────────────────────────────────────────────────────────
 tap_dance_action_t tap_dance_actions[] = {
-    [X_CTL]      = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished,void *user_data) x_finished, x_reset),
-    [BSPC_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bspc_shift_finished, bspc_shift_reset),
+    // Example home-row mods for a standard QWERTY setup
+    [TD_CTL_J]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LCTL, KC_J)),
+    [TD_CTL_S]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LCTL, KC_S)),
+    [TD_CTL_D]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LCTL, KC_D)),
+    [TD_CTL_F]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LCTL, KC_F)),
 
-    // Home-row mods — just add the ones you actually use
-    [TD_CTL_F] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hrm_finished, td_hrm_reset, &(td_mod_tap_t){KC_LCTL, KC_F}),
-    [TD_CTL_J] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hrm_finished, td_hrm_reset, &(td_mod_tap_t){KC_LCTL, KC_J}),
+    [BSPC_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bspc_shift_finished, bspc_shift_reset)
+    [TD_GUI_K]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LGUI, KC_K)),
+    [TD_GUI_D]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LGUI, KC_D)),
+    [TD_GUI_F]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LGUI, KC_F)),
+    [TD_GUI_J]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LGUI, KC_J)),
 
-    [TD_GUI_D] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hrm_finished, td_hrm_reset, &(td_mod_tap_t){KC_LGUI, KC_D}),
-    [TD_GUI_K] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hrm_finished, td_hrm_reset, &(td_mod_tap_t){KC_LGUI, KC_K}),
-
-    [TD_ALT_S] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hrm_finished, td_hrm_reset, &(td_mod_tap_t){KC_LALT, KC_S}),
-    [TD_ALT_L] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hrm_finished, td_hrm_reset, &(td_mod_tap_t){KC_LALT, KC_L}),
-
-    // Example if you want Shift on home row too
-    // [TD_SFT_A] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_hrm_finished, td_hrm_reset, &(td_mod_tap_t){KC_LSFT, KC_A}),
+    [TD_ALT_L]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LALT, KC_L)),
+    [TD_ALT_S]  = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_mod_finished, td_mod_reset, &(td_mod_tap_t)MAKE_TD_MOD(KC_LALT, KC_S)),
+    // … add as many as you need
 };
 
 #ifdef POINTING_DEVICE_ENABLE
