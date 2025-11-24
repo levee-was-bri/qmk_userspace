@@ -24,35 +24,6 @@ enum dilemma_keymap_layers {
     LAYER_POINTER,
 };
 
-typedef enum {
-    TD_NONE,
-    TD_UNKNOWN,
-    TD_SINGLE_TAP,
-    TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP,
-    TD_DOUBLE_HOLD,
-    TD_DOUBLE_SINGLE_TAP, // Send two single taps
-    TD_TRIPLE_TAP,
-    TD_TRIPLE_HOLD
-} td_state_t;
-
-typedef struct {
-    bool is_press_action;
-    td_state_t state;
-} td_tap_t;
-
-// Tap dance enums
-enum {
-    X_CTL,
-    BSPC_SHIFT
-};
-
-td_state_t cur_dance(tap_dance_state_t *state);
-
-// For the x tap dance. Put it here so it can be used in any keymap
-void x_finished(tap_dance_state_t *state, void *user_data);
-void x_reset(tap_dance_state_t *state, void *user_data);
-
 // Automatically enable sniping-mode on the pointer layer.
 // #define DILEMMA_AUTO_SNIPING_ON_LAYER LAYER_POINTER
 
@@ -69,8 +40,8 @@ void x_reset(tap_dance_state_t *state, void *user_data);
 #    define SNIPING KC_NO
 #endif // !POINTING_DEVICE_ENABLE
 
-const uint16_t PROGMEM enter_combo[] = {KC_K, KC_L, COMBO_END};
-const uint16_t PROGMEM esc_combo[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM enter_combo[] = {LGUI_T(KC_K), LALT_T(KC_L), COMBO_END};
+const uint16_t PROGMEM esc_combo[] = {LALT_T(KC_S), LGUI_T(KC_D), COMBO_END};
 combo_t key_combos[] = {
     COMBO(enter_combo, KC_ENT),
     COMBO(esc_combo, KC_ESC), // keycodes with modifiers are possible too!
@@ -89,7 +60,7 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [LAYER_BASE] = LAYOUT(
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
-        KC_TILD,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,
+        KC_GRV,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,       KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_MINS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
         KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,       KC_Y,    KC_U,    KC_I,    KC_O,    KC_P, KC_BSLS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
@@ -97,7 +68,7 @@ KC_ESC, KC_A, LALT_T(KC_S), LGUI_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, LCTL_T(KC_J)
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_LCTL,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH, KC_LALT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                   LCTL(KC_W), KC_ESC, TD(BSPC_SHIFT),  KC_DEL,   KC_ENT,  PT_SPC, LOWER, LCTL(KC_BSPC)
+                   LCTL(KC_W), KC_ESC, LSFT(KC_BSPC),  KC_DEL,   KC_ENT,  PT_SPC, LOWER, LCTL(KC_BSPC)
   //                    ╰───────────────────────────────────╯ ╰───────────────────────────────────╯
   ),
 
@@ -121,9 +92,9 @@ KC_ESC, KC_A, LALT_T(KC_S), LGUI_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, LCTL_T(KC_J)
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_MNXT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLU,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MPLY, KC_LEFT, KC_LALT, KC_LGUI, KC_LCTL, XXXXXXX,    KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_RGUI, KC_MUTE,
+KC_MPLY, KC_LCBR, LALT_T(KC_RCBR), LGUI_T(KC_LPRN), LCTL_T(KC_RPRN), KC_EQL, KC_LEFT, LCTL_T(KC_DOWN), LGUI_T(KC_UP), LALT_T(KC_RGHT), XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MPRV, KC_HOME, KC_PGUP, KC_PGDN,  KC_END, XXXXXXX,    KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, KC_VOLD,
+       XXXXXXX, XXXXXXX, KC_PGUP, KC_LBRC, KC_RBRC, KC_PLUS,    KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, KC_VOLD,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                          XXXXXXX, _______, _______, _______,    _______, _______, _______, XXXXXXX
   //                    ╰───────────────────────────────────╯ ╰───────────────────────────────────╯
@@ -145,137 +116,6 @@ KC_ESC, KC_A, LALT_T(KC_S), LGUI_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, LCTL_T(KC_J)
 };
 // clang-format on
 
-/* Return an integer that corresponds to what kind of tap dance should be executed.
- *
- * How to figure out tap dance state: interrupted and pressed.
- *
- * Interrupted: If the state of a dance is "interrupted", that means that another key has been hit
- *  under the tapping term. This is typically indicative that you are trying to "tap" the key.
- *
- * Pressed: Whether or not the key is still being pressed. If this value is true, that means the tapping term
- *  has ended, but the key is still being pressed down. This generally means the key is being "held".
- *
- * One thing that is currently not possible with qmk software in regards to tap dance is to mimic the "permissive hold"
- *  feature. In general, advanced tap dances do not work well if they are used with commonly typed letters.
- *  For example "A". Tap dances are best used on non-letter keys that are not hit while typing letters.
- *
- * Good places to put an advanced tap dance:
- *  z,q,x,j,k,v,b, any function key, home/end, comma, semi-colon
- *
- * Criteria for "good placement" of a tap dance key:
- *  Not a key that is hit frequently in a sentence
- *  Not a key that is used frequently to double tap, for example 'tab' is often double tapped in a terminal, or
- *    in a web form. So 'tab' would be a poor choice for a tap dance.
- *  Letters used in common words as a double. For example 'p' in 'pepper'. If a tap dance function existed on the
- *    letter 'p', the word 'pepper' would be quite frustrating to type.
- *
- * For the third point, there does exist the 'TD_DOUBLE_SINGLE_TAP', however this is not fully tested
- *
- */
-td_state_t cur_dance(tap_dance_state_t *state) {
-    if (state->count == 1) {
-        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
-        // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
-        else return TD_SINGLE_HOLD;
-    } else if (state->count == 2) {
-        // TD_DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
-        // action when hitting 'pp'. Suggested use case for this return value is when you want to send two
-        // keystrokes of the key, and not the 'double tap' action/macro.
-        if (state->interrupted) return TD_DOUBLE_SINGLE_TAP;
-        else if (state->pressed) return TD_DOUBLE_HOLD;
-        else return TD_DOUBLE_TAP;
-    }
-
-    // Assumes no one is trying to type the same letter three times (at least not quickly).
-    // If your tap dance key is 'KC_W', and you want to type "www." quickly - then you will need to add
-    // an exception here to return a 'TD_TRIPLE_SINGLE_TAP', and define that enum just like 'TD_DOUBLE_SINGLE_TAP'
-    if (state->count == 3) {
-        if (state->interrupted || !state->pressed) return TD_TRIPLE_TAP;
-        else return TD_TRIPLE_HOLD;
-    } else return TD_UNKNOWN;
-}
-
-// Create an instance of 'td_tap_t' for the 'x' tap dance.
-static td_tap_t xtap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-static td_tap_t bspc_shift_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
-
-void x_finished(tap_dance_state_t *state, void *user_data) {
-    xtap_state.state = cur_dance(state);
-    switch (xtap_state.state) {
-        case TD_SINGLE_TAP: register_code(KC_X); break;
-        case TD_SINGLE_HOLD: register_code(KC_LCTL); break;
-        case TD_DOUBLE_TAP: register_code(KC_ESC); break;
-        case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
-        // Last case is for fast typing. Assuming your key is `f`:
-        // For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
-        // In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
-        case TD_DOUBLE_SINGLE_TAP: tap_code(KC_X); register_code(KC_X); break;
-        default: break;
-    }
-}
-
-void x_reset(tap_dance_state_t *state, void *user_data) {
-    switch (xtap_state.state) {
-        case TD_SINGLE_TAP: unregister_code(KC_X); break;
-        case TD_SINGLE_HOLD: unregister_code(KC_LCTL); break;
-        case TD_DOUBLE_TAP: unregister_code(KC_ESC); break;
-        case TD_DOUBLE_HOLD: unregister_code(KC_LALT); break;
-        case TD_DOUBLE_SINGLE_TAP: unregister_code(KC_X); break;
-        default: break;
-    }
-    xtap_state.state = TD_NONE;
-}
-
-void bspc_shift_finished(tap_dance_state_t *state, void *user_data) {
-    bspc_shift_state.state = cur_dance(state);
-
-    switch (bspc_shift_state.state) {
-        case TD_SINGLE_TAP:
-        case TD_DOUBLE_TAP:           // double tap = two backspaces, but most people prefer just one
-        case TD_DOUBLE_SINGLE_TAP:  // fast "bb" typing protection
-        case TD_DOUBLE_HOLD:
-            register_code16(KC_BSPC);
-            break;
-
-        case TD_SINGLE_HOLD:
-            register_code(KC_LSFT);   // or KC_RSFT — left is more common
-            break;
-
-        default:
-            break;
-    }
-}
-
-void bspc_shift_reset(tap_dance_state_t *state, void *user_data) {
-    switch (bspc_shift_state.state) {
-        case TD_SINGLE_TAP:
-        case TD_DOUBLE_TAP:
-        case TD_DOUBLE_SINGLE_TAP:
-        case TD_DOUBLE_HOLD:
-            unregister_code16(KC_BSPC);
-            break;
-
-        case TD_SINGLE_HOLD:
-            unregister_code(KC_LSFT);
-            break;
-
-        default:
-            break;
-    }
-    bspc_shift_state.state = TD_NONE;
-}
-
-tap_dance_action_t tap_dance_actions[] = {
-    [X_CTL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, x_finished, x_reset),
-    [BSPC_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bspc_shift_finished, bspc_shift_reset)
-};
 
 #ifdef POINTING_DEVICE_ENABLE
 #    ifdef DILEMMA_AUTO_SNIPING_ON_LAYER
