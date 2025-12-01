@@ -42,9 +42,11 @@ enum dilemma_keymap_layers {
 
 const uint16_t PROGMEM enter_combo[] = {LGUI_T(KC_K), LALT_T(KC_L), COMBO_END};
 const uint16_t PROGMEM esc_combo[] = {LALT_T(KC_S), LGUI_T(KC_D), COMBO_END};
+const uint16_t PROGMEM tab_combo[] = {LCTL_T(KC_F), LGUI_T(KC_D), COMBO_END};
 combo_t key_combos[] = {
     COMBO(enter_combo, KC_ENT),
     COMBO(esc_combo, KC_ESC), // keycodes with modifiers are possible too!
+    COMBO(tab_combo, KC_TAB),
 };
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
@@ -66,9 +68,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
 KC_ESC, KC_A, LALT_T(KC_S), LGUI_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, LCTL_T(KC_J), LGUI_T(KC_K), LALT_T(KC_L), KC_SCLN, KC_QUOT,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_LCTL,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH, KC_LALT,
+       KC_CAPS,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH, KC_LALT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                   LCTL(KC_W), KC_ESC, LSFT(KC_BSPC),  KC_DEL,   KC_ENT,  PT_SPC, LOWER, LCTL(KC_BSPC)
+                   LCTL(KC_W), KC_ESC, LSFT_T(KC_BSPC),  KC_DEL,   KC_ENT,  PT_SPC, LT(LAYER_LOWER, KC_TAB), LCTL(KC_BSPC)
   //                    ╰───────────────────────────────────╯ ╰───────────────────────────────────╯
   ),
 
@@ -90,11 +92,11 @@ KC_ESC, KC_A, LALT_T(KC_S), LGUI_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, LCTL_T(KC_J)
   // ╭──────────────────────────────────────────────────────╮ ╭──────────────────────────────────────────────────────╮
        KC_TILD, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       KC_MNXT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_VOLU,
+       XXXXXXX, XXXXXXX, XXXXXXX, KC_LPRN, KC_RPRN, XXXXXXX,    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-KC_MPLY, KC_LCBR, LALT_T(KC_RCBR), LGUI_T(KC_LPRN), LCTL_T(KC_RPRN), KC_EQL, KC_LEFT, LCTL_T(KC_DOWN), LGUI_T(KC_UP), LALT_T(KC_RGHT), XXXXXXX, XXXXXXX,
+KC_MPLY, KC_LCBR, LALT_T(KC_RCBR), LGUI_T(KC_LBRC), LCTL_T(KC_RBRC), KC_EQL, KC_LEFT, LCTL_T(KC_DOWN), LGUI_T(KC_UP), LALT_T(KC_RGHT), XXXXXXX, XXXXXXX,
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
-       XXXXXXX, XXXXXXX, KC_PGUP, KC_LBRC, KC_RBRC, KC_PLUS,    KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, KC_VOLD,
+       XXXXXXX, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, KC_PLUS,    KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
                          XXXXXXX, _______, _______, _______,    _______, _______, _______, XXXXXXX
   //                    ╰───────────────────────────────────╯ ╰───────────────────────────────────╯
