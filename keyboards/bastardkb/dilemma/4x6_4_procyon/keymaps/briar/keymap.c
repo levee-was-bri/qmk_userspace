@@ -70,7 +70,7 @@ KC_ESC, KC_A, LALT_T(KC_S), LGUI_T(KC_D), LCTL_T(KC_F), KC_G, KC_H, LCTL_T(KC_J)
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        KC_CAPS,    PT_Z,    KC_X,    KC_C,    KC_V,    KC_B,       KC_N,    KC_M, KC_COMM,  KC_DOT, PT_SLSH, KC_LALT,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                   LCTL(KC_W), KC_ESC, LSFT_T(KC_BSPC),  KC_DEL,   KC_ENT,  PT_SPC, LT(LAYER_LOWER, KC_TAB), LCTL(KC_BSPC)
+                   LCTL(KC_W), KC_ESC, LSFT_T(KC_BSPC),  KC_DEL,   KC_ENT,  PT_SPC, LT(LAYER_LOWER, KC_TAB), XXXXXXX
   //                    ╰───────────────────────────────────╯ ╰───────────────────────────────────╯
   ),
 
@@ -98,7 +98,7 @@ KC_MPLY, KC_LCBR, LALT_T(KC_RCBR), LGUI_T(KC_LBRC), LCTL_T(KC_RBRC), KC_EQL, KC_
   // ├──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────┤
        XXXXXXX, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, KC_PLUS,    KC_HOME, KC_PGDN, KC_PGUP,  KC_END, XXXXXXX, XXXXXXX,
   // ╰──────────────────────────────────────────────────────┤ ├──────────────────────────────────────────────────────╯
-                         XXXXXXX, _______, _______, _______,    _______, _______, _______, XXXXXXX
+                    LCTL(KC_BSPC), _______, _______, _______,    _______, _______, _______, XXXXXXX
   //                    ╰───────────────────────────────────╯ ╰───────────────────────────────────╯
   ),
 
@@ -136,9 +136,9 @@ void rgb_matrix_update_pwm_buffers(void);
 #ifdef ENCODER_MAP_ENABLE
 // clang-format off
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [LAYER_BASE]       = {ENCODER_CCW_CW(LCS(KC_TAB), LCTL(KC_TAB)), ENCODER_CCW_CW(LCTL(KC_LEFT), LCTL(KC_RIGHT))},
+    [LAYER_BASE]       = {ENCODER_CCW_CW(LCS(KC_TAB), LCTL(KC_TAB)), ENCODER_CCW_CW(MS_WHLD, MS_WHLU)},
     [LAYER_LOWER]      = {ENCODER_CCW_CW(KC_UP, KC_DOWN), ENCODER_CCW_CW(KC_LEFT, KC_RGHT)},
-    [LAYER_RAISE]      = {ENCODER_CCW_CW(KC_PGUP, KC_PGDN), ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [LAYER_RAISE]      = {ENCODER_CCW_CW(LCTL(KC_LEFT), LCTL(KC_RIGHT)), ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
     [LAYER_POINTER]    = {ENCODER_CCW_CW(RM_HUED, RM_HUEU), ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
 };
 // clang-format on
