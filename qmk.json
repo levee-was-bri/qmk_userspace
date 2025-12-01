@@ -3,7 +3,7 @@
     "build_targets": [
         ["bastardkb/dilemma/3x5_3_procyon", "vendor"],
         ["bastardkb/dilemma/4x6_4_procyon", "briar"],
-        ["bastar-kb/dilemma/4x6_4_procyon", "briartest"],
+        ["bastardkb/dilemma/4x6_4_procyon", "briartest"],
         ["bastardkb/dilemma/4x6_4_procyon", "vendor"]
     ]
 }
